@@ -38,6 +38,8 @@ public class Viterbi {
 
                 System.out.println(curPOS);
 
+                //  if the curPOS does not exist as a transition key, it is a trap and the current processing must be
+                //    done according to the model
                 if (!transitions.containsKey(curPOS)) continue;
 
                 for(String nextPOS : transitions.get(curPOS).keySet()) {
