@@ -23,6 +23,8 @@ public class Main {
         BufferedReader br = new BufferedReader(new FileReader("simple-train-tags.txt"));
         Map<String, Set<String>> nextPOS = new HashMap<>();
         String line;
+
+        ///TODO: change nextPOS to MAP<String, Map<>> BECAUSE SET DOESN'T HANDLE DUPES
         while ((line = br.readLine()) != null){ // assemble map of words to set of words that follow them
             String[] POS = line.split(" ");
             for (int i = 1; i < POS.length; i++){
@@ -94,11 +96,19 @@ public class Main {
             //until period, read the line and add to wordPOSScores by <POS, <word, int-frequency>>
 
         }
+        wordFileReader.close();
+        POSFileReader.close();
 
-
-        //normalize frequencies in-place
-
-        //log normalized frequencies in-place
+        //normalize frequencies in-place, and log that
+        for (String POS: wordPOSScores.keySet()){
+            double totalInstances = 0;
+            for (String word: wordPOSScores.get(POS).keySet()){
+                totalInstances += wordPOSScores.get(POS).get(word);
+            }
+            for (String word: wordPOSScores.get(POS).keySet()){
+                wordPOSScores.get(POS).put(word, Math.log(wordPOSScores.get(POS).get(word)/totalInstances));
+            }
+        }
 
         return wordPOSScores;
     }
