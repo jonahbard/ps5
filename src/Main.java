@@ -92,9 +92,7 @@ public class Main {
                 }
                 wordPOSScores.put(POS[i], wordAndScore);
             }
-
             //until period, read the line and add to wordPOSScores by <POS, <word, int-frequency>>
-
         }
         wordFileReader.close();
         POSFileReader.close();
@@ -109,7 +107,6 @@ public class Main {
                 wordPOSScores.get(POS).put(word, Math.log(wordPOSScores.get(POS).get(word)/totalInstances));
             }
         }
-
         return wordPOSScores;
     }
 
