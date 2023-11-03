@@ -41,7 +41,7 @@ public class Main {
         }
         Map<String, Map<String, Double>> frequencies = new HashMap<>(); // make this hashmap from the other hashmap
 
-        //normalize frequencies in-place
+        //normalize frequencies in-place.
 
         //take log of normalizations in-place
 
@@ -70,16 +70,23 @@ public class Main {
 
             for (int i = 0; i < POS.length; i++){
                 Map<String, Double> wordAndScore;
-                if (wordPOSScores.containsKey(POS[i])){
-                    wordAndScore = wordPOSScores.get(POS[i]);
-                    if (wordAndScore.containsKey(words[i])){
-                        wordAndScore.put(words[i], wordAndScore.get(words[i])+1);
+                String curPOS = POS[i];
+                String curWord = words[i];
+
+//                if (!wordPOSScores.containsKey(curPOS)) {
+//                    wordPOSScores.put(curPOS, new HashMap<>());
+//                }
+
+                if (wordPOSScores.containsKey(curPOS)) {
+                    wordAndScore = wordPOSScores.get(curPOS);
+                    if (wordAndScore.containsKey(curWord)) {
+                        wordAndScore.put(curWord, wordAndScore.get(curWord)+1);
                     } else {
-                        wordAndScore.put(words[i], 1.0);
+                        wordAndScore.put(curWord, 1.0);
                     }
                 } else {
                     wordAndScore = new HashMap<>();
-                    wordAndScore.put(words[i], 1.0);
+                    wordAndScore.put(curWord, 1.0);
                 }
                 wordPOSScores.put(POS[i], wordAndScore);
             }
