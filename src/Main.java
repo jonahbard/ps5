@@ -1,4 +1,7 @@
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.sql.SQLOutput;
+import java.util.*;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -15,7 +18,32 @@ public class Main {
      */
     public String[] viterbiMostLikelyPOSSequence(String phrase){}
 
-    public Map<Map<String, String>, Double> calculateTransitionProbabilities(String POSfile){}
+    public Map<Map<String, String>, Double> calculateTransitionProbabilities(String POSfile) throws Exception {
+
+        BufferedReader br = new BufferedReader(new FileReader("simple-train-tags.txt"));
+        Map<String, Set<String>> nextWords = new HashMap<>();
+        String line;
+        while ((line = br.readLine()) != null){ // assemble map of words to set of words that follow them
+            String[] words = line.split(" ");
+            for (int i = 1; i < words.length; i++){
+                String prevWord = words[i-1];
+                String currentWord = words[i];
+                Set<String> set;
+                if (nextWords.containsKey(words[i-1])){
+                    set = nextWords.get(prevWord);
+                } else {
+                    set = new HashSet<>();
+                }
+                set.add(currentWord);
+                nextWords.put(prevWord, set);
+            }
+
+        }
+        Map<Map<String, String>, Double> frequencies = new HashMap<>(); // make this hashmap from the other hashmap
+
+        return new HashMap<Map<String, String>, Double>();
+    }
+
 
     public Map<String, Map<String, Double>> calculateWordPOSProbabilities(String wordsFile, String POSfile){}
 
