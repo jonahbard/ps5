@@ -69,6 +69,8 @@ public class Viterbi {
         //backtrace based on those maps
 
         Map<String, ViterbiStep> lastStep = steps.get(steps.size()-1);
+
+        // Get random POS for last step
         String bestLastPOS = lastStep.keySet().iterator().next();
         double bestLastScore = lastStep.get(bestLastPOS).score;
 
@@ -81,7 +83,8 @@ public class Viterbi {
 
         String out = "";
 
-        for (int i = steps.size() - 1; i >= 0; i--){
+        // Stop at 1 because we don't want to add # to the out string
+        for (int i = steps.size() - 1; i >= 1; i--){
 
             out = bestLastPOS + " " + out;
             bestLastPOS = steps.get(i).get(bestLastPOS).prevStep;
