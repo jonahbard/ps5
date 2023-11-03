@@ -16,9 +16,9 @@ public class Main {
      * @param phrase
      * @return
      */
-    public String[] viterbiMostLikelyPOSSequence(String phrase){}
+    public String[] viterbiMostLikelyPOSSequence(String phrase){} // need to decide whether we're doing this with HMM graph or not
 
-    public Map<Map<String, String>, Double> calculateTransitionProbabilities(String POSfile) throws Exception {
+    public static Map<Map<String, String>, Double> calculateTransitionProbabilities(String POSfile) throws Exception {
 
         BufferedReader br = new BufferedReader(new FileReader("simple-train-tags.txt"));
         Map<String, Set<String>> nextWords = new HashMap<>();
@@ -45,23 +45,32 @@ public class Main {
     }
 
 
-    public Map<String, Map<String, Double>> calculateWordPOSProbabilities(String wordsFile, String POSfile){}
+    public static Map<String, Map<String, Double>> calculateWordPOSProbabilities(String wordsFile, String POSFile) throws Exception {
+        // can either map POS to <word, probability> or map word to <pos, probability>. first option probably better
+
+        Map<String, Map<String, Double>> wordPOSProbabilities = new HashMap<>();
+        BufferedReader wordFileReader = new BufferedReader(new FileReader(wordsFile));
+        BufferedReader POSFileReader = new BufferedReader(new FileReader(POSFile));
+
+        String wordLine;
+        String POSLine;
+        while ((POSLine = POSFileReader.readLine()) != null && (wordLine = wordFileReader.readLine()) != null){
+            //until period, read the line and add to wordPOSprobs by <POS, <word, int-frequency>>
+
+        }
+        //normalize frequencies in-place
+        //log normalized frequencies in-place
+
+        return wordPOSProbabilities;
+    }
 
     public void assembleHMM(){} // assemble the HMM from the calculation methods
 
-    public void testHMM(String wordsFile, String POSfile){}
+    public void testHMM(String testWordsFile, String testPOSfile){}
 
-    public static void main(String[] args) {
-        // Press Opt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+    public static void main(String[] args) throws Exception {
+        calculateTransitionProbabilities("simple-train-sentences.txt");
+        calculateWordPOSProbabilities("simple-train-sentences.txt", "simple-train-tags.txt");
 
-        // Press Ctrl+R or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
-
-            // Press Ctrl+D to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Cmd+F8.
-            System.out.println("i = " + i);
-        }
     }
 }
