@@ -4,16 +4,16 @@ import java.util.Map;
 
 public class Viterbi {
 
-    Maps maps;
+    HMM hmm;
 
-    public Viterbi(Maps m) {
-        maps = m;
+    public Viterbi(HMM hmm) {
+        this.hmm = hmm;
     }
 
 
     public String calculateMostLikelyPOSSequence(String phrase){
-        Map<String, Map<String, Double>> transitions = maps.getPOSToPOSScore();
-        Map<String, Map<String, Double>> observations = maps.getPOSToWordScore();
+        Map<String, Map<String, Double>> transitions = hmm.getPOSToPOSScore();
+        Map<String, Map<String, Double>> observations = hmm.getPOSToWordScore();
 
         // Each Step<Best possible next state for each POS<current Viterbi Step>>
         ArrayList<Map<String, ViterbiStep>> steps = new ArrayList<>();
@@ -29,7 +29,6 @@ public class Viterbi {
             String nextWord = words[i];
 
             Map<String, ViterbiStep> curSteps = steps.get(steps.size()-1);
-
             Map<String, ViterbiStep> nextSteps = new HashMap<>();
             steps.add(nextSteps);
 
@@ -62,22 +61,16 @@ public class Viterbi {
         }
 
 
-        //should make a helper method to do this probebly
-
-        //store that for each possible word in its own variable (should probably a map for each word in the phrase)
-
-        //backtrace based on those maps
-
         Map<String, ViterbiStep> lastStep = steps.get(steps.size()-1);
 
         // Get random POS for last step
-        String bestLastPOS = lastStep.keySet().iterator().next();
-        double bestLastScore = lastStep.get(bestLastPOS).score;
+        String bestCurrPOS = lastStep.keySet().iterator().next();
+        double bestLastScore = lastStep.get(bestCurrPOS).score;
 
         for (String POS: lastStep.keySet()){
             if (lastStep.get(POS).score > bestLastScore) {
                 bestLastScore = lastStep.get(POS).score;
-                bestLastPOS = POS;
+                bestCurrPOS = POS;
             }
         }
 
@@ -86,8 +79,8 @@ public class Viterbi {
         // Stop at 1 because we don't want to add # to the out string
         for (int i = steps.size() - 1; i >= 1; i--){
 
-            out = bestLastPOS + " " + out;
-            bestLastPOS = steps.get(i).get(bestLastPOS).prevStep;
+            out = bestCurrPOS + " " + out;
+            bestCurrPOS = steps.get(i).get(bestCurrPOS).currStep;
         }
 
         return out;
@@ -95,11 +88,11 @@ public class Viterbi {
 
     class ViterbiStep {
         public Double score;
-        public String prevStep;
+        public String currStep;
 
-        public ViterbiStep(Double score, String prevStep) {
+        public ViterbiStep(Double score, String currStep) {
             this.score = score;
-            this.prevStep = prevStep;
+            this.currStep = currStep;
         }
     }
 }

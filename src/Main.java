@@ -14,23 +14,23 @@ public class Main {
     public void testViterbi(String testWordsFile, String testPOSfile){}
 
     public static void main(String[] args) throws Exception {
-        Maps maps = new Maps("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
+        HMM HMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
 //        System.out.println("POS-word frequencies:");
 //        System.out.println(maps.getPOSToWordFreq());
 //        System.out.println("POS-word keys:");
-        System.out.println(maps.getPOSToWordFreq().keySet());
+        System.out.println(HMM.getPOSToWordFreq().keySet());
 //        System.out.println("POS-word scores:");
 //        System.out.println(maps.getPOSToWordScore());
 //
 //        System.out.println("POS-POS frequencies:");
 //        System.out.println(maps.getPOSToPOSFreq());
 //        System.out.println("POS-word keys:");
-        System.out.println(maps.getPOSToPOSFreq().keySet());
+        System.out.println(HMM.getPOSToPOSFreq().keySet());
 //        System.out.println("POS-POS scores:");
 //        System.out.println(maps.getPOSToPOSScore());
 
 
-        Viterbi v = new Viterbi(maps);
+        Viterbi v = new Viterbi(HMM);
         System.out.println(v.calculateMostLikelyPOSSequence("my watch glows in the night ."));
     }
 }
