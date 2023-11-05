@@ -12,12 +12,24 @@ public class Viterbi {
 
 
     public String calculateMostLikelyPOSSequence(String phrase){
+
+        // each instance of this is compared to one specific POS key
+        class ViterbiStep {
+            public Double score; //the weighted HMM score for the current POS given the previous one
+            public String prevStep; // the previous step the POS->POS score reflects
+            public ViterbiStep(Double score, String prevStep) {
+                this.score = score;
+                this.prevStep = prevStep;
+            }
+        }
+
+        // map representing the transitions part of HMM graph
         Map<String, Map<String, Double>> transitions = maps.getPOSToPOSScore();
+        // map representing the observations part of HMM graph
         Map<String, Map<String, Double>> observations = maps.getPOSToWordScore();
 
-        // Each Step<Best possible next state for each POS<current Viterbi Step>>
+        // list where each element is a map representing 1 step: step<winning next state for each POS<current Viterbi Step>>
         ArrayList<Map<String, ViterbiStep>> steps = new ArrayList<>();
-
 
         Map<String, ViterbiStep> preStart = new HashMap<>();
         preStart.put("#", new ViterbiStep(0.0, null));
@@ -90,13 +102,23 @@ public class Viterbi {
         return out;
     }
 
-    class ViterbiStep {
-        public Double score;
-        public String prevStep;
+    public double viterbiAccuracy(String phrase, String actualPOSString){
+        String[] viterbiResult = calculateMostLikelyPOSSequence(phrase).split(" ");
+        String[] actualPOSArray = actualPOSString.split(" ");
 
-        public ViterbiStep(Double score, String prevStep) {
-            this.score = score;
-            this.prevStep = prevStep;
+        if (viterbiResult.length != actualPOSArray.length) {
+            System.out.println("uh oh, POS array lengths are different!");
+            return 0.0;
         }
+
+        int incorrectPOS = 0;
+        for (int i = 0; i < actualPOSArray.length; i++){
+            if (!viterbiResult[i].equals(actualPOSArray[i])){
+                incorrectPOS++;
+            }
+        }
+
+        //accuracy = (total - incorrect) / total
+        return (double) (actualPOSArray.length - incorrectPOS) / actualPOSArray.length;
     }
 }
