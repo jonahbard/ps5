@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +47,7 @@ public class Viterbi {
             for (String curPOS : curSteps.keySet()) {
                 Double curScore = curSteps.get(curPOS).score;
 
-                System.out.println(curPOS);
+                //System.out.println(curPOS);
 
                 //  if the curPOS does not exist as a transition key, it is a trap and the current processing must be
                 //    done according to the model
@@ -98,13 +100,14 @@ public class Viterbi {
         return out;
     }
 
-    public double viterbiAccuracy(String phrase, String actualPOSString){
+
+    public int incorrectPOS(String phrase, String actualPOSString){ // throw exception if POS array lengths different?
         String[] viterbiResult = calculateMostLikelyPOSSequence(phrase).split(" ");
         String[] actualPOSArray = actualPOSString.split(" ");
 
         if (viterbiResult.length != actualPOSArray.length) {
-            System.out.println("uh oh, POS array lengths are different!");
-            return 0.0;
+            System.out.println("incorrectPOS: uh oh, POS array lengths are different!");
+            return -1;
         }
 
         int incorrectPOS = 0;
@@ -113,8 +116,42 @@ public class Viterbi {
                 incorrectPOS++;
             }
         }
+        return incorrectPOS;
+    }
+
+    //return proportion of tags our model gets correct for a given line and its actual tags
+    public double lineAccuracy(String phrase, String actualPOSString){
+        String[] actualPOSArray = actualPOSString.split(" ");
+
+        int incorrectPOS = incorrectPOS(phrase, actualPOSString);
 
         //accuracy = (total - incorrect) / total
         return (double) (actualPOSArray.length - incorrectPOS) / actualPOSArray.length;
+    }
+
+    public int getNumberOfWords(String line){
+        return line.split(" ").length;
+    }
+
+    public double fileAccuracy(String textFileName, String actualPOSFileName) throws Exception {
+        BufferedReader textFileReader = new BufferedReader(new FileReader(textFileName));
+        BufferedReader tagFileReader = new BufferedReader(new FileReader(actualPOSFileName));
+
+        String textLine;
+        String tagLine;
+
+        int totalWords = 0;
+        int totalIncorrect = 0;
+
+        while ((tagLine = tagFileReader.readLine()) != null){
+            textLine = textFileReader.readLine();
+            totalWords += getNumberOfWords(textLine); // some debate here as to whether to count from tag/text
+            totalIncorrect += incorrectPOS(textLine, tagLine);
+        }
+
+        textFileReader.close();
+        tagFileReader.close();
+
+        return (double) (totalWords - totalIncorrect) / (totalWords);
     }
 }
