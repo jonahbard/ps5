@@ -5,23 +5,23 @@ import java.util.Map;
 
 public class HMM {
 
-    private Map<String, Map<String, Integer>> POSToWordFreq;
-    private Map<String, Map<String, Integer>> POSToPOSFreq;
+    private Map<String, Map<String, Integer>> observationFreqs;
+    private Map<String, Map<String, Integer>> transitionFreqs;
 
-    private Map<String, Map<String, Double>> POSToWordScore;
-    private Map<String, Map<String, Double>> POSToPOSScore;
+    private Map<String, Map<String, Double>> observationScores;
+    private Map<String, Map<String, Double>> transitionScores;
 
 
-    public Map<String, Map<String, Integer>> getPOSToWordFreq() {return POSToWordFreq;}
-    public Map<String, Map<String, Integer>> getPOSToPOSFreq() {return POSToPOSFreq;}
+    public Map<String, Map<String, Integer>> getObservationFreqs() {return observationFreqs;}
+    public Map<String, Map<String, Integer>> getTransitionFreqs() {return transitionFreqs;}
 
-    public Map<String, Map<String, Double>> getPOSToWordScore() {return POSToWordScore;}
-    public Map<String, Map<String, Double>> getPOSToPOSScore() {return POSToPOSScore;}
+    public Map<String, Map<String, Double>> getObservationScores() {return observationScores;}
+    public Map<String, Map<String, Double>> getTransitionScores() {return transitionScores;}
 
 
     private void buildToPOSToWordFreq(String POS, String word) {
-        if (!POSToWordFreq.containsKey(POS)) POSToWordFreq.put(POS, new HashMap<>());
-        Map<String, Integer> wordToFreqForPOS = POSToWordFreq.get(POS);
+        if (!observationFreqs.containsKey(POS)) observationFreqs.put(POS, new HashMap<>());
+        Map<String, Integer> wordToFreqForPOS = observationFreqs.get(POS);
 
         if (!wordToFreqForPOS.containsKey(word)) wordToFreqForPOS.put(word, 0);
         wordToFreqForPOS.put(word, wordToFreqForPOS.get(word) + 1);
@@ -29,15 +29,15 @@ public class HMM {
     }
 
     private void buildToPOSToPOSFreq(String prevPOS, String curPOS) {
-        if (!POSToPOSFreq.containsKey(prevPOS)) POSToPOSFreq.put(prevPOS, new HashMap<>());
-        Map<String, Integer> curPOSToFreqForPrevPOS = POSToPOSFreq.get(prevPOS);
+        if (!transitionFreqs.containsKey(prevPOS)) transitionFreqs.put(prevPOS, new HashMap<>());
+        Map<String, Integer> curPOSToFreqForPrevPOS = transitionFreqs.get(prevPOS);
         if (!curPOSToFreqForPrevPOS.containsKey(curPOS)) curPOSToFreqForPrevPOS.put(curPOS, 0);
         curPOSToFreqForPrevPOS.put(curPOS, curPOSToFreqForPrevPOS.get(curPOS) + 1);
     }
 
     public void fileReader(String wordFileName, String POSFileName) {
-        POSToWordFreq = new HashMap<>();
-        POSToPOSFreq = new HashMap<>();
+        observationFreqs = new HashMap<>();
+        transitionFreqs = new HashMap<>();
 
         BufferedReader wordBr;
         BufferedReader POSBr;
@@ -104,8 +104,8 @@ public class HMM {
     }
 
     private void calculateScores() {
-        POSToWordScore = calculateScore(POSToWordFreq);
-        POSToPOSScore = calculateScore(POSToPOSFreq);
+        observationScores = calculateScore(observationFreqs);
+        transitionScores = calculateScore(transitionFreqs);
     }
 
     public HMM(String wordFileName, String POSFileName) {
@@ -117,17 +117,17 @@ public class HMM {
     public static void main(String[] args) {
         HMM HMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
         System.out.println("POS-word frequencies:");
-        System.out.println(HMM.getPOSToWordFreq());
+        System.out.println(HMM.getObservationFreqs());
         System.out.println("POS-word keys:");
-        System.out.println(HMM.getPOSToWordFreq().keySet());
+        System.out.println(HMM.getObservationFreqs().keySet());
         System.out.println("POS-word scores:");
-        System.out.println(HMM.getPOSToWordScore());
+        System.out.println(HMM.getObservationScores());
 
         System.out.println("POS-POS frequencies:");
-        System.out.println(HMM.getPOSToPOSFreq());
+        System.out.println(HMM.getTransitionFreqs());
         System.out.println("POS-word keys:");
-        System.out.println(HMM.getPOSToPOSFreq().keySet());
+        System.out.println(HMM.getTransitionFreqs().keySet());
         System.out.println("POS-POS scores:");
-        System.out.println(HMM.getPOSToPOSScore());
+        System.out.println(HMM.getTransitionScores());
     }
 }

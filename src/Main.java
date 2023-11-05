@@ -18,14 +18,14 @@ public class Main {
 //        System.out.println("POS-word frequencies:");
 //        System.out.println(maps.getPOSToWordFreq());
 //        System.out.println("POS-word keys:");
-        System.out.println(HMM.getPOSToWordFreq().keySet());
+        System.out.println(HMM.getObservationFreqs().keySet());
 //        System.out.println("POS-word scores:");
 //        System.out.println(maps.getPOSToWordScore());
 //
 //        System.out.println("POS-POS frequencies:");
 //        System.out.println(maps.getPOSToPOSFreq());
 //        System.out.println("POS-word keys:");
-        System.out.println(HMM.getPOSToPOSFreq().keySet());
+        System.out.println(HMM.getTransitionFreqs().keySet());
 //        System.out.println("POS-POS scores:");
 //        System.out.println(maps.getPOSToPOSScore());
 

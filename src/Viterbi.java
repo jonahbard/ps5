@@ -16,15 +16,15 @@ public class Viterbi {
         // each instance of this is compared to one specific POS key
         class ViterbiStep {
             public Double score; //the weighted HMM score for the current POS given the previous one
-            public String prevStep; // the previous step the POS->POS score reflects
-            public ViterbiStep(Double score, String prevStep) {
+            public String currStep; // the previous step the POS->POS score reflects
+            public ViterbiStep(Double score, String currStep) {
                 this.score = score;
-                this.prevStep = prevStep;
+                this.currStep = currStep;
             }
         }
 
-        Map<String, Map<String, Double>> transitions = hmm.getPOSToPOSScore();
-        Map<String, Map<String, Double>> observations = hmm.getPOSToWordScore();
+        Map<String, Map<String, Double>> transitions = hmm.getTransitionScores();
+        Map<String, Map<String, Double>> observations = hmm.getObservationScores();
 
         // list where each element is a map representing 1 step: step<winning next state for each POS<current Viterbi Step>>
         ArrayList<Map<String, ViterbiStep>> steps = new ArrayList<>();
@@ -74,15 +74,17 @@ public class Viterbi {
         Map<String, ViterbiStep> lastStep = steps.get(steps.size()-1);
 
         // Get random POS for last step
-        String bestCurrPOS = lastStep.keySet().iterator().next();
-        double bestLastScore = lastStep.get(bestCurrPOS).score;
+        String bestLastPOS = lastStep.keySet().iterator().next();
+        double bestLastScore = lastStep.get(bestLastPOS).score;
 
         for (String POS: lastStep.keySet()){
             if (lastStep.get(POS).score > bestLastScore) {
                 bestLastScore = lastStep.get(POS).score;
-                bestCurrPOS = POS;
+                bestLastPOS = POS;
             }
         }
+
+        String bestCurrPOS = bestLastPOS;
 
         String out = "";
 
@@ -90,7 +92,7 @@ public class Viterbi {
         for (int i = steps.size() - 1; i >= 1; i--){
 
             out = bestCurrPOS + " " + out;
-            bestCurrPOS = steps.get(i).get(bestCurrPOS).prevStep;
+            bestCurrPOS = steps.get(i).get(bestCurrPOS).currStep;
         }
 
         return out;
