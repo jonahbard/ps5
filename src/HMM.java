@@ -3,7 +3,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Maps {
+public class HMM {
 
     private Map<String, Map<String, Integer>> POSToWordFreq;
     private Map<String, Map<String, Integer>> POSToPOSFreq;
@@ -108,26 +108,26 @@ public class Maps {
         POSToPOSScore = calculateScore(POSToPOSFreq);
     }
 
-    public Maps(String wordFileName, String POSFileName) {
+    public HMM(String wordFileName, String POSFileName) {
 
         fileReader(wordFileName, POSFileName);
         calculateScores();
     }
 
     public static void main(String[] args) {
-        Maps maps = new Maps("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
+        HMM HMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
         System.out.println("POS-word frequencies:");
-        System.out.println(maps.getPOSToWordFreq());
+        System.out.println(HMM.getPOSToWordFreq());
         System.out.println("POS-word keys:");
-        System.out.println(maps.getPOSToWordFreq().keySet());
+        System.out.println(HMM.getPOSToWordFreq().keySet());
         System.out.println("POS-word scores:");
-        System.out.println(maps.getPOSToWordScore());
+        System.out.println(HMM.getPOSToWordScore());
 
         System.out.println("POS-POS frequencies:");
-        System.out.println(maps.getPOSToPOSFreq());
+        System.out.println(HMM.getPOSToPOSFreq());
         System.out.println("POS-word keys:");
-        System.out.println(maps.getPOSToPOSFreq().keySet());
+        System.out.println(HMM.getPOSToPOSFreq().keySet());
         System.out.println("POS-POS scores:");
-        System.out.println(maps.getPOSToPOSScore());
+        System.out.println(HMM.getPOSToPOSScore());
     }
 }
