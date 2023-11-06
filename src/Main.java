@@ -1,16 +1,7 @@
 import java.util.Scanner;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+
 public class Main {
-
-
-    /***
-     * return array of POS that corresponds to the backtraced viterbi most-likely POS list for given string
-     * @param
-     * @return
-     */
-
     public static void runUI() {
 
         HMM hmm = new HMM("texts/brown-train-sentences.txt", "texts/brown-train-tags.txt");
@@ -27,7 +18,7 @@ public class Main {
 
         while (true) {
 
-            System.out.println("please enter your mode selection (q=quit, l=line, f=file): ");
+            System.out.println("please enter your mode selection: ");
             String line = sc.nextLine();
             if (line.equals("q")) break;
             else if (line.equals("l")) {
