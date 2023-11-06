@@ -27,7 +27,7 @@ public class Main {
 
         while (true) {
 
-            System.out.println("please enter your mode selection: ");
+            System.out.println("please enter your mode selection (q=quit, l=line, f=file): ");
             String line = sc.nextLine();
             if (line.equals("q")) break;
             else if (line.equals("l")) {
