@@ -2,6 +2,10 @@ import java.util.Scanner;
 
 
 public class Main {
+
+    /***
+     * interactive command-line UI for tagging/testing whole lines or files based on user input.
+     */
     public static void runUI() {
 
         HMM hmm = new HMM("texts/brown-train-sentences.txt", "texts/brown-train-tags.txt");
@@ -14,7 +18,6 @@ public class Main {
                 "l: line test\n" +
                 "f: file test\n" +
                 "q: quit");
-
 
         while (true) {
 
@@ -45,6 +48,9 @@ public class Main {
         sc.close();
     }
 
+    /***
+     * run basic tests, and then call runUI().
+     */
     public static void main(String[] args) throws Exception {
 
         HMM simpleHMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
@@ -74,6 +80,12 @@ public class Main {
     }
 
 
+    /***
+     * apply the viterbi model to a given line and evaluate based on its correct tags.
+     * @param v: viterbi model
+     * @param words the line we're testing
+     * @param POSs the correct tags for the line
+     */
     private static void lineTest(Viterbi v, String words, String POSs) {
         System.out.println("line we're testing: " + words);
         System.out.println("Model POS outputs: " + v.calculateMostLikelyPOSSequence(words));
@@ -82,6 +94,12 @@ public class Main {
         System.out.println("\n");
     }
 
+    /***
+     * apply the viterbi model to a given file and evaluate based on its correct tags.
+     * @param v viterbi model
+     * @param wordsFile the file whose line's we're tagging
+     * @param POSFile the file containing the correct tags for the wordsFile
+     */
     private static void fileTest(Viterbi v, String wordsFile, String POSFile) {
         System.out.println("file we're testing: " + wordsFile);
         System.out.println("accuracy of the model for this file: " + v.fileAccuracy(wordsFile, POSFile));
