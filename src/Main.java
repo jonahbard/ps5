@@ -19,19 +19,27 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.println("\n---HMM UI---");
 
-        System.out.println("please type in a line you would like to get the part-of-speech tags for.");
-        String line = sc.nextLine();
-        System.out.println("parts of speech for your line: \n" + v.calculateMostLikelyPOSSequence(line));
 
-        System.out.println("\nplease type in the local project path to a formatted text file you would like to test the model on:");
-        String textFile = sc.nextLine();
-        System.out.println("please type in the local project path to a corresponding TAGS file you would like to test the model on:");
-        String tagFile = sc.nextLine();
-
-        System.out.println("awesome! our model accuracy is: " + v.fileAccuracy(textFile, tagFile));
+        while (true) {
+            System.out.println("please type in a line you would like to get the part-of-speech tags for.");
+            String line = sc.nextLine();
+            System.out.println("parts of speech for your line: \n" + v.calculateMostLikelyPOSSequence(line));
+        }
 
 
-        sc.close();
+//        System.out.println("please type in a line you would like to get the part-of-speech tags for.");
+//        String line = sc.nextLine();
+//        System.out.println("parts of speech for your line: \n" + v.calculateMostLikelyPOSSequence(line));
+//
+//        System.out.println("\nplease type in the local project path to a formatted text file you would like to test the model on:");
+//        String textFile = sc.nextLine();
+//        System.out.println("please type in the local project path to a corresponding TAGS file you would like to test the model on:");
+//        String tagFile = sc.nextLine();
+//
+//        System.out.println("awesome! our model accuracy is: " + v.fileAccuracy(textFile, tagFile));
+//
+//
+//        sc.close();
     }
 
     public static void main(String[] args) throws Exception {
@@ -81,6 +89,6 @@ public class Main {
         System.out.println(v2.fileAccuracy("texts/brown-test-sentences.txt", "texts/brown-test-tags.txt"));
 
 
-//        runUI();
+        runUI();
     }
 }

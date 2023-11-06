@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Viterbi {
@@ -143,7 +144,7 @@ public class Viterbi {
         int totalWords = 0;
         int totalIncorrect = 0;
 
-        while ((tagLine = tagFileReader.readLine()) != null){
+        while ((tagLine = tagFileReader.readLine()) != null) {
             textLine = textFileReader.readLine();
             totalWords += getNumberOfWords(textLine); // some debate here as to whether to count from tag/text
             totalIncorrect += incorrectPOS(textLine, tagLine);
