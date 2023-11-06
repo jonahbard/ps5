@@ -80,6 +80,6 @@ public class Main {
         System.out.println(v2.fileAccuracy("texts/brown-test-sentences.txt", "texts/brown-test-tags.txt"));
 
 
-        runUI();
+//        runUI();
     }
 }

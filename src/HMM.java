@@ -28,6 +28,14 @@ public class HMM {
 
     }
 
+    private static void buildFreqMap(Map<String, Map<String, Integer>> map, String from, String to) {
+        if (!map.containsKey(from)) map.put(from, new HashMap<>());
+        Map<String, Integer> innerMap = map.get(from);
+
+        if(!innerMap.containsKey(to)) innerMap.put(to, 0);
+        innerMap.put(to, innerMap.get(to) + 1);
+    }
+
     private void buildToPOSToPOSFreq(String prevPOS, String curPOS) {
         if (!transitionFreqs.containsKey(prevPOS)) transitionFreqs.put(prevPOS, new HashMap<>());
         Map<String, Integer> curPOSToFreqForPrevPOS = transitionFreqs.get(prevPOS);
@@ -63,8 +71,11 @@ public class HMM {
                     String curPOS = POS[i];
                     String curWord = words[i].toLowerCase();
 
-                    buildToPOSToWordFreq(curPOS, curWord);
-                    buildToPOSToPOSFreq(prevPOS, curPOS);
+                    buildFreqMap(transitionFreqs, prevPOS, curPOS);
+                    buildFreqMap(observationFreqs, curPOS, curWord);
+
+//                    buildToPOSToWordFreq(curPOS, curWord);
+//                    buildToPOSToPOSFreq(prevPOS, curPOS);
 
                     prevPOS = curPOS;
                 }

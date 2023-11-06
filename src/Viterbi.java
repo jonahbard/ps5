@@ -55,7 +55,7 @@ public class Viterbi {
 
                 for(String nextPOS : transitions.get(curPOS).keySet()) {
 
-                    Double observationScore = observations.get(nextPOS).getOrDefault(nextWord, -5.0);
+                    Double observationScore = observations.get(nextPOS).getOrDefault(nextWord, -100.0);
                     Double newScore = curScore + transitions.get(curPOS).get(nextPOS) + observationScore;
 
                     if (nextSteps.containsKey(nextPOS)) {
