@@ -20,7 +20,8 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.println("\n---HMM UI---");
 
-        System.out.println("Option\n" +
+        System.out.println("A brown trained model is used for the command line interface");
+        System.out.println("Options\n" +
                 "l: line test\n" +
                 "f: file test\n" +
                 "q: quit");
@@ -88,6 +89,7 @@ public class Main {
                 "attorneys for the mayor said that an amicable property settlement has been agreed upon .",
                 "N P DET N VD CNJ DET ADJ N N V V VN ADV .");
         lineTest(brownV, "his work is to bark in a cave .", "PRO N V P V P DET N .");
+        lineTest(brownV, "Hello , this is a test .", "UH , DET V DET N .");
 
         System.out.println("--BROWN FILE TEST--");
         fileTest(brownV, "texts/brown-test-sentences.txt", "texts/brown-test-tags.txt");
