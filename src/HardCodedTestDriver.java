@@ -11,7 +11,19 @@ public class HardCodedTestDriver {
 
         Viterbi v = new Viterbi(hmm);
 
-        System.out.println(v.calculateMostLikelyPOSSequence("chase watch dog chase watch"));
+        String sent1 = "chase watch dog chase watch";
+        String sent2 = "cat and cat and dog and watch chase";
+        String sent3 = "there are none words";
+
+        demoSentence(v, sent1);
+        demoSentence(v, sent2);
+        demoSentence(v, sent3);
+    }
+
+    public static void demoSentence(Viterbi v, String sentance) {
+        System.out.println("Testing sentance: " + sentance);
+        String output = v.calculateMostLikelyPOSSequence(sentance);
+        System.out.println("Most likely sequence: " + output);
     }
 
 

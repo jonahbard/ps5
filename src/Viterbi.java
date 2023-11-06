@@ -134,24 +134,47 @@ public class Viterbi {
         return line.split(" ").length;
     }
 
-    public double fileAccuracy(String textFileName, String actualPOSFileName) throws Exception {
-        BufferedReader textFileReader = new BufferedReader(new FileReader(textFileName));
-        BufferedReader tagFileReader = new BufferedReader(new FileReader(actualPOSFileName));
-
-        String textLine;
-        String tagLine;
-
+    public double fileAccuracy(String textFileName, String actualPOSFileName) {
         int totalWords = 0;
         int totalIncorrect = 0;
 
-        while ((tagLine = tagFileReader.readLine()) != null) {
-            textLine = textFileReader.readLine();
-            totalWords += getNumberOfWords(textLine); // some debate here as to whether to count from tag/text
-            totalIncorrect += incorrectPOS(textLine, tagLine);
+        BufferedReader textFileReader = null;
+        BufferedReader tagFileReader = null;
+
+
+        int lines = 0;
+        try {
+            textFileReader = new BufferedReader(new FileReader(textFileName));
+            tagFileReader = new BufferedReader(new FileReader(actualPOSFileName));
+
+            String textLine;
+            String tagLine;
+
+            while ((tagLine = tagFileReader.readLine()) != null) {
+                textLine = textFileReader.readLine();
+                totalWords += getNumberOfWords(textLine); // some debate here as to whether to count from tag/text
+                totalIncorrect += incorrectPOS(textLine, tagLine);
+                lines += 1;
+            }
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error during file reading");
+        }
+        finally {
+            try { textFileReader.close(); }
+            catch (Exception e) {}
+
+            try { tagFileReader.close(); }
+            catch (Exception e) {}
+
         }
 
-        textFileReader.close();
-        tagFileReader.close();
+        System.out.println("total words: " + totalWords);
+        System.out.println("total lines: " + lines);
+
+        System.out.println("total incorrect: " + totalIncorrect);
 
         return (double) (totalWords - totalIncorrect) / (totalWords);
     }
