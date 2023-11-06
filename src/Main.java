@@ -1,13 +1,10 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
-
 
 public class Main {
 
-    /***
-     * interactive command-line UI for tagging/testing whole lines or files based on user input.
-     */
     public static void runUI() {
-
         HMM hmm = new HMM("texts/brown-train-sentences.txt", "texts/brown-train-tags.txt");
         Viterbi v = new Viterbi(hmm);
 
@@ -43,7 +40,7 @@ public class Main {
             else {
                 System.out.println("Please try a valid input");
             }
-            System.out.println("\n");
+            System.out.println( );
         }
         sc.close();
     }
@@ -52,6 +49,16 @@ public class Main {
      * run basic tests, and then call runUI().
      */
     public static void main(String[] args) throws Exception {
+
+        HMM PDHMM = new HMM(PDTransitionsMap(), PDObservationsMap());
+        Viterbi PDV = new Viterbi(PDHMM);
+
+        System.out.println("--RECITATION SENTENCE TESTS--");
+        // Demonstrate the most likely POS (Part Of Speech) sequence for each sentence
+        demoSentence(PDV, "chase watch dog chase watch");
+        demoSentence(PDV, "cat and cat and dog and watch chase");
+        demoSentence(PDV, "there are none words");
+
 
         HMM simpleHMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
         Viterbi simpleV = new Viterbi(simpleHMM);
@@ -76,11 +83,11 @@ public class Main {
         System.out.println("--BROWN FILE TEST--");
         fileTest(brownV, "texts/brown-test-sentences.txt", "texts/brown-test-tags.txt");
 
+
         runUI();
     }
 
-
-    /***
+    /**
      * apply the viterbi model to a given line and evaluate based on its correct tags.
      * @param v: viterbi model
      * @param words the line we're testing
@@ -94,7 +101,7 @@ public class Main {
         System.out.println("\n");
     }
 
-    /***
+    /**
      * apply the viterbi model to a given file and evaluate based on its correct tags.
      * @param v viterbi model
      * @param wordsFile the file whose line's we're tagging
@@ -105,4 +112,101 @@ public class Main {
         System.out.println("accuracy of the model for this file: " + v.fileAccuracy(wordsFile, POSFile));
         System.out.println("\n");
     }
+
+    /**
+     * Prints the tested sentence and the most likely parts of speech sequence as calculated by the Viterbi algorithm.
+     * @param v The Viterbi algorithm instance.
+     * @param sentence The sentence to be tested.
+     */
+    private static void demoSentence(Viterbi v, String sentence) {
+        System.out.println("Testing sentence: " + sentence);
+        // Calculate and print the most likely POS sequence for the given sentence
+        String output = v.calculateMostLikelyPOSSequence(sentence);
+        System.out.println("Most likely sequence: " + output);
+        System.out.println();
+    }
+
+
+    /**
+     * Creates a hardcoded observation probability distribution for a HMM.
+     * @return A map representing the observation probabilities of different parts of speech.
+     */
+    private static Map<String, Map<String, Double>> PDObservationsMap() {
+        // Initialize observation probability map
+        Map<String, Map<String, Double>> observations = new HashMap<>();
+
+        // Define observation probabilities for the start of a sentence
+        Map<String, Double> start = new HashMap<>();
+        observations.put("#", start); // '#' represents the start of a sentence
+
+        // Define observation probabilities for nouns phrases (NP)
+        Map<String, Double> NP = new HashMap<>();
+        observations.put("NP", NP);
+        NP.put("chase", 10.0);
+
+        // Define observation probabilities for nouns (N)
+        Map<String, Double> N = new HashMap<>();
+        observations.put("N", N);
+        N.put("cat", 4.0);
+        N.put("dog", 4.0);
+        N.put("watch", 2.0);
+
+        // Define observation probabilities for conjunctions (CNJ)
+        Map<String, Double> CNJ = new HashMap<>();
+        observations.put("CNJ", CNJ);
+        CNJ.put("and", 10.0);
+
+        // Define observation probabilities for verbs (V)
+        Map<String, Double> V = new HashMap<>();
+        observations.put("V", V);
+        V.put("get", 1.0);
+        V.put("chase", 3.0);
+        V.put("watch", 6.0);
+
+        return observations;
+    }
+
+    /**
+     * Creates a hardcoded transition probability distribution for a HMM.
+     * @return A map representing the transition probabilities between different parts of speech.
+     */
+    private static Map<String, Map<String, Double>> PDTransitionsMap() {
+        // Initialize transition probability map
+        Map<String, Map<String, Double>> transitions = new HashMap<>();
+
+        // Define transition probabilities from the start of a sentence
+        Map<String, Double> startTo = new HashMap<>();
+        transitions.put("#", startTo); // '#' represents the start of a sentence
+        startTo.put("NP", 3.0);
+        startTo.put("N", 7.0);
+
+        // Define transition probabilities from noun phrases (NP)
+        Map<String, Double> NPTo = new HashMap<>();
+        transitions.put("NP", NPTo);
+        NPTo.put("CNJ", 2.0);
+        NPTo.put("V", 8.0);
+
+        // Define transition probabilities from verbs (V)
+        Map<String, Double> VTo = new HashMap<>();
+        transitions.put("V", VTo);
+        VTo.put("NP", 4.0);
+        VTo.put("CNJ", 2.0);
+        VTo.put("N", 4.0);
+
+        // Define transition probabilities from conjunctions (CNJ)
+        Map<String, Double> CNJTo = new HashMap<>();
+        transitions.put("CNJ", CNJTo);
+        CNJTo.put("NP", 2.0);
+        CNJTo.put("V", 4.0);
+        CNJTo.put("N", 4.0);
+
+        // Define transition probabilities from nouns (N)
+        Map<String, Double> NTo = new HashMap<>();
+        transitions.put("N", NTo);
+        NTo.put("V", 8.0);
+        NTo.put("CNJ", 2.0);
+
+        return transitions;
+    }
+
 }
