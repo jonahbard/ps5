@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Viterbi {
 
-    private static final double PENALTY_FOR_MISSING_OBSERVATION = -100.0
+    private static final double PENALTY_FOR_MISSING_OBSERVATION = -100.0;
 
     HMM hmm;
 

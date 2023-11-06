@@ -36,14 +36,15 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        HMM HMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
+        HMM simpleHMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
 
+        System.out.println("--LINE TEST--");
         System.out.println("observation frequencies keyset:");
-        System.out.println(HMM.getObservationFreqs().keySet());
+        System.out.println(simpleHMM.getObservationFreqs().keySet());
 
         System.out.println("transition frequencies keyset:");
-        System.out.println(HMM.getTransitionFreqs().keySet());
-        Viterbi v = new Viterbi(HMM);
+        System.out.println(simpleHMM.getTransitionFreqs().keySet());
+        Viterbi v = new Viterbi(simpleHMM);
 
         System.out.println("line we're testing:");
         System.out.println(v.calculateMostLikelyPOSSequence("his work is to bark in a cave ."));
@@ -58,14 +59,14 @@ public class Main {
         System.out.println(v.fileAccuracy("texts/simple-test-sentences.txt", "texts/simple-test-tags.txt"));
 
 
-        HMM HMM2 = new HMM("texts/brown-train-sentences.txt", "texts/brown-train-tags.txt");
+        HMM BrownHMM = new HMM("texts/brown-train-sentences.txt", "texts/brown-train-tags.txt");
 
         System.out.println("\nobservation frequencies keyset:");
-        System.out.println(HMM2.getObservationFreqs().keySet());
+        System.out.println(BrownHMM.getObservationFreqs().keySet());
 
         System.out.println("transition frequencies keyset:");
-        System.out.println(HMM2.getTransitionFreqs().keySet());
-        Viterbi v2 = new Viterbi(HMM2);
+        System.out.println(BrownHMM.getTransitionFreqs().keySet());
+        Viterbi v2 = new Viterbi(BrownHMM);
 
         System.out.println("line we're testing:");
         System.out.println(v2.calculateMostLikelyPOSSequence("his work is to bark in a cave ."));
