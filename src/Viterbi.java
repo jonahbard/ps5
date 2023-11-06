@@ -31,18 +31,30 @@ public class Viterbi {
      * @param phrase
      * @return
      */
-    public String calculateMostLikelyPOSSequence(String phrase){
+    public String calculateMostLikelyPOSSequence(String phrase) {
+        List<Map<String, ViterbiStep>> steps = createBackTraceSteps(phrase);
 
-        // each instance of this is compared to one specific POS key
-        class ViterbiStep {
-            public Double score; //the weighted HMM score for the current POS given the previous one
-            public String currStep; // the previous step the POS->POS score reflects
-            public ViterbiStep(Double score, String currStep) {
-                this.score = score;
-                this.currStep = currStep;
-            }
+        // get the best POS at the last step
+        String bestCurrPOS = bestPOSForStep(steps.get(steps.size() - 1));
+
+        String out = "";
+
+        // Stop at 1 because we don't want to add # to the out string
+        for (int i = steps.size() - 1; i >= 1; i--){
+            // add the best POS for the current step to the output string
+            out = bestCurrPOS + " " + out;
+            bestCurrPOS = steps.get(i).get(bestCurrPOS).currStep;
         }
 
+        return out;
+    }
+
+    /**
+     * Create the backtrace steps for the given phrase
+     * @param phrase
+     * @return
+     */
+    private List<Map<String, ViterbiStep>> createBackTraceSteps(String phrase) {
         Map<String, Map<String, Double>> transitions = hmm.getTransitionScores();
         Map<String, Map<String, Double>> observations = hmm.getObservationScores();
 
@@ -56,14 +68,13 @@ public class Viterbi {
 
         String[] words = phrase.split(" ");
 
-
         for (int i = 0; i < words.length; i++){
             String nextWord = words[i].toLowerCase();
 
-            Map<String, ViterbiStep> curSteps = steps.get(steps.size()-1);
+            Map<String, ViterbiStep> curSteps = steps.get(steps.size() - 1);
             Map<String, ViterbiStep> nextSteps = new HashMap<>();
             steps.add(nextSteps);
-            
+
             // go over each POS in the current step
             for (String curPOS : curSteps.keySet()) {
                 Double curScore = curSteps.get(curPOS).score;
@@ -86,43 +97,37 @@ public class Viterbi {
                             nextSteps.put(nextPOS, new ViterbiStep(newScore, curPOS));
                         }
                     }
+
                     // if the next POS does not exist in the nextSteps map, add it
                     else {
                         nextSteps.put(nextPOS, new ViterbiStep(newScore, curPOS));
                     }
-
                 }
             }
         }
 
+        return steps;
+    }
 
-        // get the last step
-        Map<String, ViterbiStep> lastStep = steps.get(steps.size()-1);
-
+    /**
+     * Get the next POS with the best score for the given step
+     * @param step
+     * @return
+     */
+    private String bestPOSForStep(Map<String, ViterbiStep> step) {
         // Get random POS for last step
-        String bestLastPOS = lastStep.keySet().iterator().next();
-        double bestLastScore = lastStep.get(bestLastPOS).score;
+        String bestLastPOS = step.keySet().iterator().next();
+        double bestLastScore = step.get(bestLastPOS).score;
 
         // find the POS with the highest score for the last step
-        for (String POS: lastStep.keySet()){
-            if (lastStep.get(POS).score > bestLastScore) {
-                bestLastScore = lastStep.get(POS).score;
+        for (String POS: step.keySet()){
+            if (step.get(POS).score > bestLastScore) {
+                bestLastScore = step.get(POS).score;
                 bestLastPOS = POS;
             }
         }
 
-        String bestCurrPOS = bestLastPOS;
-
-        String out = "";
-
-        // Stop at 1 because we don't want to add # to the out string
-        for (int i = steps.size() - 1; i >= 1; i--){
-            // add the best POS for the current step to the output string
-            out = bestCurrPOS + " " + out;
-            bestCurrPOS = steps.get(i).get(bestCurrPOS).currStep;
-        }
-
-        return out;
+        return bestLastPOS;
     }
 
     /***
@@ -221,5 +226,14 @@ public class Viterbi {
 
         // accuracy = (total - incorrect) / total
         return (double) (totalWords - totalIncorrect) / (totalWords);
+    }
+}
+
+class ViterbiStep {
+    public final Double score; //the weighted HMM score for the current POS given the previous one
+    public final String currStep; // the previous step the POS->POS score reflects
+    public ViterbiStep(Double score, String currStep) {
+        this.score = score;
+        this.currStep = currStep;
     }
 }
