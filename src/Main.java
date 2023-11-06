@@ -2,8 +2,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * This class provides an interface to test and use HMMs and Viterbi models
+ * 
+ * @author Jonah Bard, Daniel Katz
+ */
+
 public class Main {
 
+    /**
+     * run the UI for the HMM model.
+     */
     public static void runUI() {
         HMM hmm = new HMM("texts/brown-train-sentences.txt", "texts/brown-train-tags.txt");
         Viterbi v = new Viterbi(hmm);
@@ -46,9 +55,9 @@ public class Main {
     }
 
     /***
-     * run basic tests, and then call runUI().
+     * run tests using the recitation model, simple model, and brown model, and then call runUI().
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         HMM PDHMM = new HMM(PDTransitionsMap(), PDObservationsMap());
         Viterbi PDV = new Viterbi(PDHMM);

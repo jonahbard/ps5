@@ -5,12 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class that runs Viterbi algorithim and related tests on given HMM
+ * 
+ * @author Jonah Bard, Daniel Katz
+ */
+
 public class Viterbi {
 
     private static final double UNSEEN_SCORE = -100.0;
 
     HMM hmm;
 
+    /**
+     * Constructor for Viterbi object
+     * @param hmm
+     */
     public Viterbi(HMM hmm) {
         this.hmm = hmm;
     }
@@ -39,11 +49,13 @@ public class Viterbi {
         // list where each element is a map representing 1 step: step<winning next state for each POS<current Viterbi Step>>
         List<Map<String, ViterbiStep>> steps = new ArrayList<>();
 
+        // add the pre-start step
         Map<String, ViterbiStep> preStart = new HashMap<>();
         preStart.put("#", new ViterbiStep(0.0, null));
         steps.add(preStart);
 
         String[] words = phrase.split(" ");
+
 
         for (int i = 0; i < words.length; i++){
             String nextWord = words[i].toLowerCase();
@@ -51,7 +63,8 @@ public class Viterbi {
             Map<String, ViterbiStep> curSteps = steps.get(steps.size()-1);
             Map<String, ViterbiStep> nextSteps = new HashMap<>();
             steps.add(nextSteps);
-
+            
+            // go over each POS in the current step
             for (String curPOS : curSteps.keySet()) {
                 Double curScore = curSteps.get(curPOS).score;
 
@@ -59,17 +72,21 @@ public class Viterbi {
                 //  if the curPOS does not exist as a transition key, it is a trap and the current path doesn't work
                 if (!transitions.containsKey(curPOS)) continue;
 
+                // go over each POS that the current POS can transition to
                 for(String nextPOS : transitions.get(curPOS).keySet()) {
 
+                    // calculate the score for the next POS
                     Double observationScore = observations.get(nextPOS).getOrDefault(nextWord, UNSEEN_SCORE);
                     Double newScore = curScore + transitions.get(curPOS).get(nextPOS) + observationScore;
 
+                    // if the next POS already exists in the nextSteps map, compare the scores and keep the higher one
                     if (nextSteps.containsKey(nextPOS)) {
                         double existingNextStepScore = nextSteps.get(nextPOS).score;
                         if (existingNextStepScore < newScore) {
                             nextSteps.put(nextPOS, new ViterbiStep(newScore, curPOS));
                         }
                     }
+                    // if the next POS does not exist in the nextSteps map, add it
                     else {
                         nextSteps.put(nextPOS, new ViterbiStep(newScore, curPOS));
                     }
@@ -79,12 +96,14 @@ public class Viterbi {
         }
 
 
+        // get the last step
         Map<String, ViterbiStep> lastStep = steps.get(steps.size()-1);
 
         // Get random POS for last step
         String bestLastPOS = lastStep.keySet().iterator().next();
         double bestLastScore = lastStep.get(bestLastPOS).score;
 
+        // find the POS with the highest score for the last step
         for (String POS: lastStep.keySet()){
             if (lastStep.get(POS).score > bestLastScore) {
                 bestLastScore = lastStep.get(POS).score;
@@ -98,7 +117,7 @@ public class Viterbi {
 
         // Stop at 1 because we don't want to add # to the out string
         for (int i = steps.size() - 1; i >= 1; i--){
-
+            // add the best POS for the current step to the output string
             out = bestCurrPOS + " " + out;
             bestCurrPOS = steps.get(i).get(bestCurrPOS).currStep;
         }
@@ -108,8 +127,8 @@ public class Viterbi {
 
     /***
      * returns the amount of incorrect POS tags the model assigns to a given string
-     * @param phrase: the line given to the model to process
-     * @param actualPOSString: the line representing the correct tags for the given line
+     * @param phrase the line given to the model to process
+     * @param actualPOSString the line representing the correct tags for the given line
      * @return
      */
     public int incorrectPOS(String phrase, String actualPOSString){
@@ -133,8 +152,8 @@ public class Viterbi {
 
     /***
      * return proportion of tags our model gets correct for a given line and its actual tags
-     * @param phrase: given line to process
-     * @param actualPOSString: correct POS tags for line
+     * @param phrase given line to process
+     * @param actualPOSString correct POS tags for line
      * @return
      */
     public double lineAccuracy(String phrase, String actualPOSString){
@@ -146,16 +165,23 @@ public class Viterbi {
         return (double) (actualPOSArray.length - incorrectPOS) / actualPOSArray.length;
     }
 
-    //it's 1-line / 1-use but just makes things more coherent
+    /**
+     * returns the number of words in a given line
+     *  
+     * it's 1-line / 1-use but just makes things more coherent
+     * 
+     * @param line
+     * @return
+     */
     public int getNumberOfWords(String line){
         return line.split(" ").length;
     }
+
     /***
      * returns the accuracy of the model's POS predictions for an entire file of formatted text.
      * @param textFileName
      * @param actualPOSFileName
      * @return
-     * @throws Exception
      */
     public double fileAccuracy(String textFileName, String actualPOSFileName) {
         int totalWords = 0;
@@ -165,7 +191,6 @@ public class Viterbi {
         BufferedReader tagFileReader = null;
 
 
-        int lines = 0;
         try {
             textFileReader = new BufferedReader(new FileReader(textFileName));
             tagFileReader = new BufferedReader(new FileReader(actualPOSFileName));
@@ -173,11 +198,10 @@ public class Viterbi {
             String textLine;
             String tagLine;
 
-            while ((tagLine = tagFileReader.readLine()) != null) {
-                textLine = textFileReader.readLine();
-                totalWords += getNumberOfWords(textLine); // some debate here as to whether to count from tag/text
+            // Calculate the number of words and the number of incorrect POS tags for each line
+            while ((tagLine = tagFileReader.readLine()) != null && (textLine = textFileReader.readLine()) != null) {
+                totalWords += getNumberOfWords(textLine);
                 totalIncorrect += incorrectPOS(textLine, tagLine);
-                lines += 1;
             }
 
         }
@@ -193,11 +217,7 @@ public class Viterbi {
             catch (Exception e) {}
         }
 
-        System.out.println("total words: " + totalWords);
-        System.out.println("total lines: " + lines);
-
-        System.out.println("total incorrect: " + totalIncorrect);
-
+        // accuracy = (total - incorrect) / total
         return (double) (totalWords - totalIncorrect) / (totalWords);
     }
 }
