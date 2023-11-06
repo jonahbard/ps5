@@ -48,7 +48,7 @@ public class HMM {
                 if (POS.length != words.length){
                     System.out.println(" ");
                     System.out.println("line: " + wordLine);
-                    throw new Exception();
+                    throw new Exception("Number of words and POS tags not equal");
                 }
 
                 for (int i = 0; i < POS.length; i++){
