@@ -36,10 +36,15 @@ public class HMM {
      * @param to The key in the inner map to increment.
      */
     private static void buildFreqMap(Map<String, Map<String, Integer>> map, String from, String to) {
+        // Create map for outer key if it does not exist
         if (!map.containsKey(from)) map.put(from, new HashMap<>());
+
+        // Get inner map
         Map<String, Integer> innerMap = map.get(from);
 
+        // Create a default for the inner value if it does not exist
         if(!innerMap.containsKey(to)) innerMap.put(to, 0);
+
         innerMap.put(to, innerMap.get(to) + 1);
     }
 
@@ -61,7 +66,8 @@ public class HMM {
 
 
             String POSLine, wordLine;
-            // for each line in the file
+
+            // Read each line in the file
             while ((POSLine = POSBr.readLine()) != null && (wordLine = wordBr.readLine()) != null) {
                 String prevPOS = "#";
                 String[] POS = POSLine.split(" ");

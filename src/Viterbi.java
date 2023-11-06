@@ -131,21 +131,24 @@ public class Viterbi {
      * @param actualPOSString the line representing the correct tags for the given line
      * @return
      */
-    public int incorrectPOS(String phrase, String actualPOSString){
+    public int incorrectPOS(String phrase, String actualPOSString) {
         String[] viterbiResult = calculateMostLikelyPOSSequence(phrase).split(" ");
         String[] actualPOSArray = actualPOSString.split(" ");
 
+        // If the lengths are wrong, something is not right and the user has to fix the inputs
         if (viterbiResult.length != actualPOSArray.length) {
             System.out.println("incorrectPOS: uh oh, POS array lengths are different!");
             return -1;
         }
 
+        // Check each generated POS with the inputted POS
         int incorrectPOS = 0;
         for (int i = 0; i < actualPOSArray.length; i++){
             if (!viterbiResult[i].equals(actualPOSArray[i])){
                 incorrectPOS++;
             }
         }
+
         return incorrectPOS;
     }
 
@@ -195,8 +198,7 @@ public class Viterbi {
             textFileReader = new BufferedReader(new FileReader(textFileName));
             tagFileReader = new BufferedReader(new FileReader(actualPOSFileName));
 
-            String textLine;
-            String tagLine;
+            String textLine, tagLine;
 
             // Calculate the number of words and the number of incorrect POS tags for each line
             while ((tagLine = tagFileReader.readLine()) != null && (textLine = textFileReader.readLine()) != null) {
