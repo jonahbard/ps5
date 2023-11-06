@@ -19,28 +19,12 @@ public class HMM {
     public Map<String, Map<String, Double>> getTransitionScores() {return transitionScores;}
 
 
-    private void buildToPOSToWordFreq(String POS, String word) {
-        if (!observationFreqs.containsKey(POS)) observationFreqs.put(POS, new HashMap<>());
-        Map<String, Integer> wordToFreqForPOS = observationFreqs.get(POS);
-
-        if (!wordToFreqForPOS.containsKey(word)) wordToFreqForPOS.put(word, 0);
-        wordToFreqForPOS.put(word, wordToFreqForPOS.get(word) + 1);
-
-    }
-
     private static void buildFreqMap(Map<String, Map<String, Integer>> map, String from, String to) {
         if (!map.containsKey(from)) map.put(from, new HashMap<>());
         Map<String, Integer> innerMap = map.get(from);
 
         if(!innerMap.containsKey(to)) innerMap.put(to, 0);
         innerMap.put(to, innerMap.get(to) + 1);
-    }
-
-    private void buildToPOSToPOSFreq(String prevPOS, String curPOS) {
-        if (!transitionFreqs.containsKey(prevPOS)) transitionFreqs.put(prevPOS, new HashMap<>());
-        Map<String, Integer> curPOSToFreqForPrevPOS = transitionFreqs.get(prevPOS);
-        if (!curPOSToFreqForPrevPOS.containsKey(curPOS)) curPOSToFreqForPrevPOS.put(curPOS, 0);
-        curPOSToFreqForPrevPOS.put(curPOS, curPOSToFreqForPrevPOS.get(curPOS) + 1);
     }
 
     public void fileReader(String wordFileName, String POSFileName) {
