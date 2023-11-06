@@ -16,6 +16,11 @@ public class Viterbi {
     }
 
 
+    /**
+     * Calculate the most likely POS sequence based on the param and the model passed into the object during creation.
+     * @param phrase
+     * @return
+     */
     public String calculateMostLikelyPOSSequence(String phrase){
 
         // each instance of this is compared to one specific POS key

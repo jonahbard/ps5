@@ -33,6 +33,10 @@ public class Main {
             else if (line.equals("l")) {
                 System.out.println("please type in a line you would like to get the part-of-speech tags for.");
                 String inputLine = sc.nextLine();
+                if (inputLine.isBlank()) {
+                    System.out.println("Please enter a non-empty line next time");
+                    continue;
+                }
                 System.out.println("parts of speech for your line: \n" + v.calculateMostLikelyPOSSequence(inputLine));
             }
             else if (line.equals("f")) {
@@ -46,7 +50,6 @@ public class Main {
                 System.out.println("Please try a valid input");
             }
             System.out.println("\n");
-            line = "";
         }
         sc.close();
     }
