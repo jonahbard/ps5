@@ -101,8 +101,13 @@ public class Viterbi {
         return out;
     }
 
-
-    public int incorrectPOS(String phrase, String actualPOSString){ // throw exception if POS array lengths different?
+    /***
+     * returns the amount of incorrect POS tags the model assigns to a given string
+     * @param phrase: the line given to the model to process
+     * @param actualPOSString: the line representing the correct tags for the given line
+     * @return
+     */
+    public int incorrectPOS(String phrase, String actualPOSString){
         String[] viterbiResult = calculateMostLikelyPOSSequence(phrase).split(" ");
         String[] actualPOSArray = actualPOSString.split(" ");
 
@@ -120,7 +125,13 @@ public class Viterbi {
         return incorrectPOS;
     }
 
-    //return proportion of tags our model gets correct for a given line and its actual tags
+
+    /***
+     * return proportion of tags our model gets correct for a given line and its actual tags
+     * @param phrase: given line to process
+     * @param actualPOSString: correct POS tags for line
+     * @return
+     */
     public double lineAccuracy(String phrase, String actualPOSString){
         String[] actualPOSArray = actualPOSString.split(" ");
 
@@ -130,10 +141,18 @@ public class Viterbi {
         return (double) (actualPOSArray.length - incorrectPOS) / actualPOSArray.length;
     }
 
+    //it's 1-line / 1-use but just makes things more coherent
     public int getNumberOfWords(String line){
         return line.split(" ").length;
     }
 
+    /***
+     * returns the accuracy of the model's POS predictions for an entire file of formatted text.
+     * @param textFileName
+     * @param actualPOSFileName
+     * @return
+     * @throws Exception
+     */
     public double fileAccuracy(String textFileName, String actualPOSFileName) throws Exception {
         BufferedReader textFileReader = new BufferedReader(new FileReader(textFileName));
         BufferedReader tagFileReader = new BufferedReader(new FileReader(actualPOSFileName));
@@ -146,7 +165,7 @@ public class Viterbi {
 
         while ((tagLine = tagFileReader.readLine()) != null) {
             textLine = textFileReader.readLine();
-            totalWords += getNumberOfWords(textLine); // some debate here as to whether to count from tag/text
+            totalWords += getNumberOfWords(textLine);
             totalIncorrect += incorrectPOS(textLine, tagLine);
         }
 
