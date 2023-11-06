@@ -41,7 +41,7 @@ public class Viterbi {
         String[] words = phrase.split(" ");
 
         for (int i = 0; i < words.length; i++){
-            String nextWord = words[i];
+            String nextWord = words[i].toLowerCase();
 
             Map<String, ViterbiStep> curSteps = steps.get(steps.size()-1);
             Map<String, ViterbiStep> nextSteps = new HashMap<>();
