@@ -3,6 +3,14 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class builds hidden Markov models (HMMs) from various sources.
+ * 
+ * Used copilot to help generate comments
+ * 
+ *  @author Jonah Bard, Daniel Katz
+ */
+
 public class HMM {
 
     private Map<String, Map<String, Integer>> observationFreqs;
@@ -19,6 +27,14 @@ public class HMM {
     public Map<String, Map<String, Double>> getTransitionScores() {return transitionScores;}
 
 
+    /**
+     * Builds a frequency map for 'from' and 'to' strings.
+     * Adds 'from' and 'to' to the map if they don't exist, then increments the count of 'to'.
+     *
+     * @param map The frequency map.
+     * @param from The key in the outer map.
+     * @param to The key in the inner map to increment.
+     */
     private static void buildFreqMap(Map<String, Map<String, Integer>> map, String from, String to) {
         if (!map.containsKey(from)) map.put(from, new HashMap<>());
         Map<String, Integer> innerMap = map.get(from);
@@ -27,6 +43,11 @@ public class HMM {
         innerMap.put(to, innerMap.get(to) + 1);
     }
 
+    /**
+     * Reads in a file of words and a file of POS tags, and builds frequency maps for each.
+     * @param wordFileName The file containing the words.
+     * @param POSFileName The file containing the POS tags.
+     */
     public void fileReader(String wordFileName, String POSFileName) {
         observationFreqs = new HashMap<>();
         transitionFreqs = new HashMap<>();
@@ -40,11 +61,13 @@ public class HMM {
 
 
             String POSLine, wordLine;
+            // for each line in the file
             while ((POSLine = POSBr.readLine()) != null && (wordLine = wordBr.readLine()) != null) {
                 String prevPOS = "#";
                 String[] POS = POSLine.split(" ");
                 String[] words = wordLine.split(" ");
 
+                // if the number of words and POS tags aren't equal, throw an exception
                 if (POS.length != words.length){
                     System.out.println(" ");
                     System.out.println("line: " + wordLine);
@@ -79,6 +102,11 @@ public class HMM {
         }
     }
 
+    /**
+     * Calculates the score each state based on the frequency map.
+     * @param freqMap The frequency map to calculate the score for.
+     * @return A map of scores for each state.
+     */
     private static Map<String, Map<String, Double>> calculateScore(Map<String, Map<String, Integer>> freqMap) {
         Map<String, Map<String, Double>> scoreMap = new HashMap<>();
 
@@ -91,12 +119,14 @@ public class HMM {
             scoreMap.put(outerVal, scoreInnerMap);
 
             int totalInstances = 0;
-            // for each either POS or word in given map, depending on whether it's POStoPOS or POStoWord
-            for (String innerVal: freqInnerMap.keySet()){
+
+            // add the total number of instances that occur under the outerKey
+            for (String innerVal: freqInnerMap.keySet()) {
                 totalInstances += freqInnerMap.get(innerVal);
             }
 
             for (String innerVal: freqMap.get(outerVal).keySet()){
+                // calculate the score for each POS or word
                 Double freqValue = Math.log((double) freqMap.get(outerVal).get(innerVal) / totalInstances);
                 scoreInnerMap.put(innerVal, freqValue);
             }
@@ -105,21 +135,38 @@ public class HMM {
         return scoreMap;
     }
 
+    /**
+     * Calculates the scores for the transition and observation maps.
+     */
     private void calculateScores() {
         observationScores = calculateScore(observationFreqs);
         transitionScores = calculateScore(transitionFreqs);
     }
 
+    /**
+     * Creates an HMM from a file of words and a file of POS tags.
+     * @param wordFileName The file containing the words.
+     * @param POSFileName The file containing the POS tags.
+     */
     public HMM(String wordFileName, String POSFileName) {
         fileReader(wordFileName, POSFileName);
         calculateScores();
     }
 
+    /**
+     * Creates an HMM from a map of transition scores and a map of observation scores.
+     * @param transitionScores The map of transition scores.
+     * @param observationScores The map of observation scores.
+     */
     public HMM(Map<String, Map<String, Double>> transitionScores, Map<String, Map<String, Double>> observationScores) {
         this.transitionScores = transitionScores;
         this.observationScores = observationScores;
     }
 
+    /**
+     * Print out the frequency and score maps for manual inspection.
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         HMM HMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
         System.out.println("POS-word frequencies:");
