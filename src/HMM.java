@@ -178,7 +178,10 @@ public class HMM {
      * @param args Command line arguments.
      */
     public static void main(String[] args) {
-        HMM HMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
+        HMM HMM = new HMM("texts/example-sentences.txt", "texts/example-tags.txt");
+
+        System.out.println("Example Training");
+
         System.out.println("POS-word frequencies:");
         System.out.println(HMM.getObservationFreqs());
         System.out.println("POS-word keys:");

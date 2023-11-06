@@ -90,10 +90,13 @@ public class Main {
                 "N P DET N VD CNJ DET ADJ N N V V VN ADV .");
         lineTest(brownV, "his work is to bark in a cave .", "PRO N V P V P DET N .");
         lineTest(brownV, "Hello , this is a test .", "UH , DET V DET N .");
+        lineTest(brownV, "Will eats the fish", "NP V DET N");
+        lineTest(brownV, "Jobs wore one color", "NP VD DET N");
+        lineTest(brownV, "The jobs were mine", "DET N VD PRO");
+
 
         System.out.println("--BROWN FILE TEST--");
         fileTest(brownV, "texts/brown-test-sentences.txt", "texts/brown-test-tags.txt");
-
 
         runUI();
     }

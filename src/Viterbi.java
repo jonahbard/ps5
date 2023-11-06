@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class Viterbi {
 
-    private static final double UNSEEN_SCORE = -100.0;
+    private static final double UNSEEN_SCORE = -10.0;
 
     HMM hmm;
 
