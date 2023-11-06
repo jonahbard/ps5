@@ -31,8 +31,8 @@ public class HMM {
         observationFreqs = new HashMap<>();
         transitionFreqs = new HashMap<>();
 
-        BufferedReader wordBr;
-        BufferedReader POSBr;
+        BufferedReader wordBr = null;
+        BufferedReader POSBr = null;
 
         try {
             wordBr = new BufferedReader(new FileReader(wordFileName));
@@ -58,15 +58,24 @@ public class HMM {
                     buildFreqMap(transitionFreqs, prevPOS, curPOS);
                     buildFreqMap(observationFreqs, curPOS, curWord);
 
-//                    buildToPOSToWordFreq(curPOS, curWord);
-//                    buildToPOSToPOSFreq(prevPOS, curPOS);
-
                     prevPOS = curPOS;
                 }
             }
         }
         catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                wordBr.close();
+            } catch (Exception e) {
+                System.out.println("wordBR couldn't be closed");
+            }
+            try {
+                POSBr.close();
+            } catch (Exception e) {
+                System.out.println("POSBR couldn't be closed");
+            }
         }
     }
 

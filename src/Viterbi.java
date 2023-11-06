@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class Viterbi {
 
+    private static final double PENALTY_FOR_MISSING_OBSERVATION = -100.0
+
     HMM hmm;
 
     public Viterbi(HMM hmm) {
@@ -47,15 +49,13 @@ public class Viterbi {
             for (String curPOS : curSteps.keySet()) {
                 Double curScore = curSteps.get(curPOS).score;
 
-                //System.out.println(curPOS);
 
-                //  if the curPOS does not exist as a transition key, it is a trap and the current processing must be
-                //    done according to the model
+                //  if the curPOS does not exist as a transition key, it is a trap and the current path doesn't work
                 if (!transitions.containsKey(curPOS)) continue;
 
                 for(String nextPOS : transitions.get(curPOS).keySet()) {
 
-                    Double observationScore = observations.get(nextPOS).getOrDefault(nextWord, -100.0);
+                    Double observationScore = observations.get(nextPOS).getOrDefault(nextWord, PENALTY_FOR_MISSING_OBSERVATION);
                     Double newScore = curScore + transitions.get(curPOS).get(nextPOS) + observationScore;
 
                     if (nextSteps.containsKey(nextPOS)) {
