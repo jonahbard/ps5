@@ -32,6 +32,8 @@ public class Viterbi {
      * @return
      */
     public String calculateMostLikelyPOSSequence(String phrase) {
+
+        // Get the backtrace steps
         List<Map<String, ViterbiStep>> steps = createBackTraceSteps(phrase);
 
         // get the best POS at the last step
