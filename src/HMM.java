@@ -90,8 +90,6 @@ public class HMM {
             Map<String, Double> scoreInnerMap = new HashMap<>();
             scoreMap.put(outerVal, scoreInnerMap);
 
-//            Map<String, Integer> innerMap = freqMap.get(outerVal);
-
             int totalInstances = 0;
             // for each either POS or word in given map, depending on whether it's POStoPOS or POStoWord
             for (String innerVal: freqInnerMap.keySet()){
@@ -99,7 +97,7 @@ public class HMM {
             }
 
             for (String innerVal: freqMap.get(outerVal).keySet()){
-                Double freqValue = Math.log(freqMap.get(outerVal).get(innerVal) / (double) totalInstances);
+                Double freqValue = Math.log((double) freqMap.get(outerVal).get(innerVal) / totalInstances);
                 scoreInnerMap.put(innerVal, freqValue);
             }
         }
@@ -113,7 +111,6 @@ public class HMM {
     }
 
     public HMM(String wordFileName, String POSFileName) {
-
         fileReader(wordFileName, POSFileName);
         calculateScores();
     }

@@ -31,7 +31,7 @@ public class Viterbi {
         Map<String, Map<String, Double>> observations = hmm.getObservationScores();
 
         // list where each element is a map representing 1 step: step<winning next state for each POS<current Viterbi Step>>
-        ArrayList<Map<String, ViterbiStep>> steps = new ArrayList<>();
+        List<Map<String, ViterbiStep>> steps = new ArrayList<>();
 
         Map<String, ViterbiStep> preStart = new HashMap<>();
         preStart.put("#", new ViterbiStep(0.0, null));
