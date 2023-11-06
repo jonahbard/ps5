@@ -19,12 +19,14 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.println("\n---HMM UI---");
 
-
         while (true) {
-            System.out.println("please type in a line you would like to get the part-of-speech tags for.");
+            System.out.println("please type in a line you would like to get the part-of-speech tags for. just press ENTER to exit.");
             String line = sc.nextLine();
+            if (line.isEmpty()) break;
             System.out.println("parts of speech for your line: \n" + v.calculateMostLikelyPOSSequence(line));
         }
+
+        sc.close();
 
 
 //        System.out.println("please type in a line you would like to get the part-of-speech tags for.");
@@ -61,7 +63,7 @@ public class Main {
         System.out.println(v.lineAccuracy("his work is to bark in a cave .", "PRO N V P V P DET N ."));
 
 
-        System.out.println("--FILE TEST--");
+        System.out.println("\n--FILE TEST--");
         System.out.println("file we're testing: simple-test-sentences.txt");
         System.out.println("accuracy of the model for this file:");
         System.out.println(v.fileAccuracy("texts/simple-test-sentences.txt", "texts/simple-test-tags.txt"));
@@ -83,7 +85,7 @@ public class Main {
         System.out.println(v2.lineAccuracy("his work is to bark in a cave .", "PRO N V P V P DET N ."));
 
 
-        System.out.println("--FILE TEST--");
+        System.out.println("\n--FILE TEST--");
         System.out.println("file we're testing: brown-test-sentences.txt");
         System.out.println("accuracy of the model for this file:");
         System.out.println(v2.fileAccuracy("texts/brown-test-sentences.txt", "texts/brown-test-tags.txt"));
