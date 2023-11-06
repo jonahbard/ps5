@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Viterbi {
 
-    private static final double PENALTY_FOR_MISSING_OBSERVATION = -100.0;
+    private static final double UNSEEN_SCORE = -100.0;
 
     HMM hmm;
 
@@ -56,7 +56,7 @@ public class Viterbi {
 
                 for(String nextPOS : transitions.get(curPOS).keySet()) {
 
-                    Double observationScore = observations.get(nextPOS).getOrDefault(nextWord, PENALTY_FOR_MISSING_OBSERVATION);
+                    Double observationScore = observations.get(nextPOS).getOrDefault(nextWord, UNSEEN_SCORE);
                     Double newScore = curScore + transitions.get(curPOS).get(nextPOS) + observationScore;
 
                     if (nextSteps.containsKey(nextPOS)) {

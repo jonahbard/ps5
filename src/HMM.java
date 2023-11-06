@@ -115,6 +115,11 @@ public class HMM {
         calculateScores();
     }
 
+    public HMM(Map<String, Map<String, Double>> transitionScores, Map<String, Map<String, Double>> observationScores) {
+        this.transitionScores = transitionScores;
+        this.observationScores = observationScores;
+    }
+
     public static void main(String[] args) {
         HMM HMM = new HMM("texts/simple-train-sentences.txt", "texts/simple-train-tags.txt");
         System.out.println("POS-word frequencies:");
