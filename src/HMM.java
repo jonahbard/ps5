@@ -64,7 +64,6 @@ public class HMM {
             wordBr = new BufferedReader(new FileReader(wordFileName));
             POSBr = new BufferedReader(new FileReader(POSFileName));
 
-
             String POSLine, wordLine;
 
             // Read each line in the file
