@@ -137,7 +137,7 @@ public class Viterbi {
 
         // If the lengths are wrong, something is not right and the user has to fix the inputs
         if (viterbiResult.length != actualPOSArray.length) {
-            System.out.println("incorrectPOS: uh oh, POS array lengths are different!");
+            System.out.println("incorrectPOS: uh oh, POS array lengths are different! Check the inputs");
             return -1;
         }
 
@@ -159,7 +159,7 @@ public class Viterbi {
      * @param actualPOSString correct POS tags for line
      * @return
      */
-    public double lineAccuracy(String phrase, String actualPOSString){
+    public double lineAccuracy(String phrase, String actualPOSString) {
         String[] actualPOSArray = actualPOSString.split(" ");
 
         int incorrectPOS = incorrectPOS(phrase, actualPOSString);
@@ -193,7 +193,6 @@ public class Viterbi {
         BufferedReader textFileReader = null;
         BufferedReader tagFileReader = null;
 
-
         try {
             textFileReader = new BufferedReader(new FileReader(textFileName));
             tagFileReader = new BufferedReader(new FileReader(actualPOSFileName));
@@ -212,6 +211,7 @@ public class Viterbi {
             System.out.println("Error during file reading");
         }
         finally {
+            // Close the file readers
             try { textFileReader.close(); }
             catch (Exception e) {}
 

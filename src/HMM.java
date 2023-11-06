@@ -69,7 +69,10 @@ public class HMM {
 
             // Read each line in the file
             while ((POSLine = POSBr.readLine()) != null && (wordLine = wordBr.readLine()) != null) {
+
+                // Reset the prevPOS to the start for each new line
                 String prevPOS = "#";
+
                 String[] POS = POSLine.split(" ");
                 String[] words = wordLine.split(" ");
 
@@ -80,6 +83,7 @@ public class HMM {
                     throw new Exception("Number of words and POS tags not equal");
                 }
 
+                // Build the observation and transition frequency maps based on the inputted words
                 for (int i = 0; i < POS.length; i++){
                     String curPOS = POS[i];
                     String curWord = words[i].toLowerCase();
@@ -95,6 +99,7 @@ public class HMM {
             e.printStackTrace();
         }
         finally {
+            // Close the file readers
             try {
                 wordBr.close();
             } catch (Exception e) {
