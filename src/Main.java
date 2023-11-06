@@ -50,7 +50,6 @@ public class Main {
                 System.out.println("Please try a valid input");
             }
             System.out.println("\n");
-//            line = "";
         }
         sc.close();
     }
